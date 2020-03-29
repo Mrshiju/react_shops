@@ -7,7 +7,6 @@ import store from './store/store';
 import './style/index.css'
 // 处理点击移动端事件
 import FastClick from 'fastclick';
-const baseUrl = 'http://sms-shop.oss-cn-beijing.aliyuncs.com/';
 FastClick.attach(document.body);
 ReactDOM.render(
     <Provider store={store}>

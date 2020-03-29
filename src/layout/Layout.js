@@ -56,7 +56,7 @@ export class Layout extends Component {
           {this.props.children}
         </TabBar.Item>
         <TabBar.Item
-          title={this.props.loginState?'我的': '未登录'}
+          title='个人中心'
           key="Mine"
           icon={<i className="iconfont iconweibiaoti2fuzhi12"></i>}
           selectedIcon={<i className="iconfont iconweibiaoti2fuzhi12" style={{color: '#33A3F4'}}></i>}

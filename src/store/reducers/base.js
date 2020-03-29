@@ -1,6 +1,6 @@
 let initState = {
     baseUrl: "http://sms-shop.oss-cn-beijing.aliyuncs.com/",
-    token:'a4bc549a-5775-491e-8346-b86856204c72'
+    token:'271fd288-8b84-44a4-a613-b4dea3b33509'
 }
 
 

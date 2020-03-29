@@ -36,9 +36,20 @@
 
 
 .category{
-  height:calc(100% - 95px) !important;
+  height:calc(100%) !important;
 }
 .am-tabs-vertical .am-tabs-pane-wrap {
   padding-bottom: 95px;
   box-sizing: border-box;
+}
+
+
+.category .am-tabs,.am-tabs-vertical,.am-tabs-left{
+  height: calc(100%);
+  padding-top :50px;
+  box-sizing: border-box;
+  background-color: white;
+}
+.category .am-tabs-tab-bar-wrap {
+  height: 50%;
 }

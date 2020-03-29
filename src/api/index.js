@@ -36,13 +36,21 @@ export const searchGoods = value => axios.get('/goods/search?' + value)
 export const searchSuggest = value => axios.get('/goods/search?query=' + value)
 // 获取购物车数据
 export const getCartGoods = () => axiosToken.get('api/cart/showCart')
+// 购物车添加数量
+export const syncCart = (infos) => axiosToken.post('api/cart/upCart', infos)
 // 添加购物车
 export const addCart = goodsInfo => axios.post('/my/cart/add', goodsInfo)
+// 删除购物车
+export const deletCart = cartId => axiosToken.post('api/cart/batchDelCart',cartId)
+// 获取个人中心佣金
+export const getCommis = () => axiosToken.get('api/member/showUserInfo')
 // 同步购物车
-export const syncCart = infos => axios.post('/my/cart/sync', infos)
 // 创建订单
 export const createOrder = goodsInfo => axios.post('/my/orders/create', goodsInfo)
 // 获取订单
-export const getOrder = () => axios.get('my/orders/all')
+export const getOrder = () => axiosToken.get('api/order/getOrderList')
 // 获取用户信息
 export const getUserInfo = () => axios.get('/my/users/userinfo')
+
+//添加地址
+export const addAdress = (address) => axiosToken("api/upAddress",address)

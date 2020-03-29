@@ -17,7 +17,6 @@ import SearchGoods from './views/SearchGoods'
 import ErrorPage from './views/ErrorPage'
 import PrivateRoute from './components/PrivateRoute'
 
-
 function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>

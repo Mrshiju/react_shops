@@ -9,9 +9,10 @@ export const CartReducer = (state = initState, action) => {
             let {cart_Infos} = action.payload
             let totalNum = 0;
             // 通过循环遍历获取购物车商品总量
-            for (let goods_id in cart_Infos) {
-                totalNum += cart_Infos[goods_id].amount
-            }
+            cart_Infos.forEach((item,index) => {
+                totalNum += item.pcount
+            });
+            
             // 返回新的数据
             return {...state, totalNum, ...action.payload}
         case 'ADD_CART':

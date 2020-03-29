@@ -13,7 +13,7 @@ export class My extends Component {
 
         }
     }
-    UNSAFE_componentWillMount() {
+  componentWillMount() {
         // 获取用户信息
         getUserInfo().then(res => {
             const { meta: { status }, message } = res.data

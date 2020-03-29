@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Modal, Checkbox, WingBlank, Stepper, SwipeAction, Toast } from 'antd-mobile'
 import emptyCart from '../assets/imgs/cart_empty.png'
-import { getCartGoods, syncCart } from '../api/index'
+import { getCartGoods, syncCart , deletCart} from '../api/index'
 import '../style/cart.css'
 import ContentLoader from 'react-content-loader'
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -57,13 +57,18 @@ export class Cart extends Component {
 
   // 初始化
   init = () => {
+    
+    
+   
+    
     getCartGoods().then(res => {
       // 将数据解构处理
-      console.log(res)
-
       // 状态码200表示获取购物车数据成功
       if(res.data.data){
         let list = res.data.data;
+        list.forEach((item,index) => {
+          item.selectedStatus = false
+        })
 
         this.setState({
           list,
@@ -81,16 +86,33 @@ export class Cart extends Component {
   }
   // 同步购物车数据
   syncCartGoodsData = () => {
-    syncCart({ infos: JSON.stringify(this.state.cart_infos) })
+  
     // 计算CartReducer中的totalNum
-    this.props.snycCartGoods(this.state.cart_infos, this.state.totalPrice, this.state.selectedGoodsTotalNum)
+    this.props.snycCartGoods(this.state.list, this.state.totalPrice, this.state.selectedGoodsTotalNum)
   }
 
   // 改变商品数量（stepper)
-  handleUpdateNum = (num, cartId) => {
+  handleUpdateNum = (num, cartId ,pcount) => {
     // 更新被点击的商品的数量
-    const cart_infos = this.state.cart_infos
-    cart_infos[cartId].amount = num
+    console.log(num,pcount);
+    let infos = {
+      cartId:cartId,
+      count:num - pcount,
+    }
+    syncCart(infos).then(res => {
+      console.log(res);
+      
+    })
+    // syncCart(infos).then(res => {
+    //   console.log(res);
+      
+    // })
+    const cart_infos = this.state.list
+    cart_infos.filter((item,index)=>{
+      if(item.cartId == cartId){
+        return item.pcount = num
+      }
+    })
     this.setState({
       num,
       cart_infos,
@@ -104,14 +126,21 @@ export class Cart extends Component {
   // 改变对应商品是否选择的状态
   changeSingleSelectedStatus = (e, cartId) => {
     // 同步状态
-    let cart_infos = this.state.cart_infos
-    cart_infos[cartId].selectedStatus = e.target.checked
+    let cart_infos = this.state.list
+   
+    cart_infos.filter((item,index) => {
+      if(item.cartId == cartId){
+       return item.selectedStatus = e.target.checked
+      }
+    })
+    // cart_infos[cartId].selectedStatus = e.target.checked
     // 判断所有商品是否都选中
     this.isAllSelected()
     // 计算总价
     this.calTotalPrice()
     this.setState({
       // 更新购物车商品信息
+      list:cart_infos,
       cart_infos: cart_infos,
       // 判断是增函数减选择的商品数量
       allSelectedNum: e.target.checked ? this.state.allSelectedNum + 1 : this.state.allSelectedNum - 1
@@ -120,16 +149,20 @@ export class Cart extends Component {
   // 判断所有商品是否都选中
   isAllSelected = () => {
     // 先预设全选状态为true
-    let allSelected = true
-
+    // let allSelected = true
+    let allSelected ;
+  
     // 循环判断每个商品是否都选中
-    for (let cartId in this.state.cart_infos) {
-      if (!this.state.cart_infos[cartId].selectedStatus) {
-        // 如果有一个没选中，则设置全选状态为false，并跳出循环
-        allSelected = false
-        break
+    this.state.list.forEach((item)=>{
+      if(item.selectedStatus == false){
+        allSelected = false;
+      }else{
+        allSelected = true;
+
       }
-    }
+
+    })
+    
     this.setState({
       allStatus: allSelected
     })
@@ -137,14 +170,16 @@ export class Cart extends Component {
   // 点击全选框
   handleAllChecked = () => {
     // 获取商品信息
-    let cart_infos = this.state.cart_infos
+    
+    let cart_infos = this.state.list
     // 循环遍历每个商品，设置是否选中,与allStatus同步
-    for (let cartId in cart_infos) {
-      cart_infos[cartId].selectedStatus = this.state.allStatus
-    }
+    cart_infos.forEach((item,index) => {
+      item.selectedStatus = this.state.allStatus
+    })
+    
     this.setState({
       cart_infos,
-      allSelectedNum: this.state.allStatus ? Object.values(cart_infos).length : 0
+      allSelectedNum: this.state.allStatus ? cart_infos.length : 0
     })
     // 计算总价
     this.calTotalPrice()
@@ -153,12 +188,14 @@ export class Cart extends Component {
   calTotalPrice = () => {
     let totalPrice = 0
     let selectedGoodsTotalNum = 0
-    for (let cartId in this.state.cart_infos) {
-      if (this.state.cart_infos[cartId].selectedStatus) {
-        totalPrice += this.state.cart_infos[cartId].amount * this.state.cart_infos[cartId].goods_price
-        selectedGoodsTotalNum += this.state.cart_infos[cartId].amount
+    let cart_Infos = this.state.list
+    cart_Infos.forEach((item,index)=>{
+      if(item.selectedStatus == true){
+        totalPrice += item.pcount * item.wxPrice
+        selectedGoodsTotalNum += item.pcount
       }
-    }
+    })
+  
     this.setState({
       totalPrice,
       selectedGoodsTotalNum
@@ -166,16 +203,27 @@ export class Cart extends Component {
   }
   // 删除单个商品
   handleDeleteSingleGoods = cartId => {
-    let cart_infos = this.state.cart_infos
+    let cart_infos = this.state.list
     // 删除对应id的商品
-    delete cart_infos[cartId]
+    let cartIds = [];
+    cartIds.push(cartId)
+    deletCart(cartIds).then(res => {
+      if(res.data.status == true){
+        this.init()
+      }
+    })
+    // cart_infos.forEach(item => {
+    //   if(item.cartId == cartId){
+    //     delete item
+    //   }
+    // })
     // 再更新state中的cart_infos
     this.setState({
       cart_infos,
-      totalNum: Object.values(this.state.cart_infos).length,
+      totalNum:this.state.list.length,
       allSelectedNum: this.state.allSelectedNum ? this.state.allSelectedNum - 1 : 0,
       // 如果购物车为空，则设置购物车信息状态为false，表示购物车清空了
-      cart_infos_Status: !Object.values(cart_infos).length ? false : true
+      cart_infos_Status: !this.state.list.length ? false : true
     }, () => {
       // 同步购物车
       this.syncCartGoodsData()
@@ -215,7 +263,7 @@ export class Cart extends Component {
       return
     }
     // 将CartReducer中保存的数据更新
-    this.props.snycCartGoods(this.state.cart_infos, this.state.totalPrice, this.state.selectedGoodsTotalNum)
+    this.props.snycCartGoods(this.state.list, this.state.totalPrice, this.state.selectedGoodsTotalNum)
     this.props.history.push('/pay')
   }
 
@@ -279,6 +327,7 @@ export class Cart extends Component {
                   ]}
                 >
                   <CheckboxItem
+                    checked= {v.selectedStatus}
                     onChange={e => this.changeSingleSelectedStatus(e, v.cartId)}
                   >
                     <div className="single-order">
@@ -295,7 +344,7 @@ export class Cart extends Component {
                           showNumber
                           min={1}
                           defaultValue={v.pcount}
-                          onChange={num => this.handleUpdateNum(num, v.cartId)}
+                          onChange={num => this.handleUpdateNum(num, v.cartId,v.pcount)}
                         />
 
                         <div className="order-price">

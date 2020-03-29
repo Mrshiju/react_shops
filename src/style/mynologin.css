@@ -49,3 +49,33 @@ header .goto-login {
   color: #5f5b5b;
   font-size: .426667rem;
 }
+
+.myInfo{
+  font-size: .4rem;
+  padding-left: .4rem;
+}
+.myInfo >span{
+  display: block;
+  width: 100%;
+  color: white;
+}
+.my_orderInfo{
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid #ddd;
+}
+.my_orderInfo div{
+  font-size: .4rem;
+}
+.my_orderInfo div div{
+  width: 25%;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.my_orderInfo div div span{
+  width: 100%;
+  text-align: center;
+  margin: .2rem 0;
+
+}
