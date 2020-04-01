@@ -32,7 +32,7 @@ function App() {
           <Route path='/address' render={props => <PrivateRoute {...props} component={AddressInfo}></PrivateRoute>}></Route>
           <Route path='/order' render={props => <PrivateRoute {...props} component={OrderList}></PrivateRoute>}></Route>
           <Route path='/register' render={props => <Layout {...props}><Register></Register></Layout>}></Route>
-          <Route path='/goodsdetail/:id' render={props => <GoodsDetail {...props}></GoodsDetail>}></Route>
+          <Route path='/goodsdetail:id' render={props => <GoodsDetail {...props}></GoodsDetail>}></Route>
           <Route path='/searchfield' render={props => <SearchField {...props}></SearchField>}></Route>
           <Route path='/searchgoods/:goodsvalue' render={props => <SearchGoods {...props}></SearchGoods>}></Route>
           <Route path='/404' render={props => <ErrorPage {...props}></ErrorPage>}></Route>

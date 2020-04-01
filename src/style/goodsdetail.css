@@ -16,6 +16,9 @@
 .good-content .good-price span {
   font-size: .32rem;
 }
+.good-select{
+  background-color: #fff;
+}
 .good-select li {
   display: flex;
   padding: .266667rem;
@@ -94,4 +97,43 @@
 }
 .goods-footer .buy {
   background-color: #ff4444;
+}
+.evaluate{
+  border-top: 2px solid red;
+  font-size: .3rem;
+  padding: .2rem .4rem;
+}
+
+.good-content{
+  background-color: white;
+}
+
+.proInfo{
+  background-color: #fff;
+  font-size: .6rem;
+  text-align: center;
+  border-top: #ff4444 2px solid;
+}
+.morePro{
+  font-size: .2rem;
+}
+.checkPro{
+  border-bottom: 1px #ddd solid;
+  padding: .4rem .2rem;
+}
+.checkPro > div{
+  padding: .2rem;
+  text-align: left;
+}
+.checkPro > div > div {
+  margin: .2rem;
+}
+
+.am-modal-popup .am-modal-content{
+  padding-bottom: 150px;
+}
+
+#active {
+  color: white;
+  background: orange;
 }

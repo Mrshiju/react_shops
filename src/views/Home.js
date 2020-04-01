@@ -241,7 +241,7 @@ export class Home extends Component {
                   {this.state.goodsList.map(v => (
                     <div key={v.id} className="good">
                       <div className="good_content"
-                        onClick={() => this.props.history.push(`/goodsdetail/${v.id}`)}
+                        onClick={() => this.props.history.push(`/goodsdetail${v.id}`)}
                       >
                         <div className="img_box">
                           <img src={this.props.baseUrl+v.bannerpic} alt="" />

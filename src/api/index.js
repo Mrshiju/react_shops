@@ -1,11 +1,9 @@
 import axios from 'axios'
 import qs from 'querystring'
 import {baseUrl} from '../store/reducers/base'
+import { List } from 'antd-mobile';
 
-// 设置公共请求前缀
-// 或者 https://www.ehomespace.com/api/public/v1
-// 或者 https://autumnfish.cn/wx/api/public/v1
-// 或者 https://api.zbztb.cn/api/public/v1
+
 // axios.defaults.baseURL = 'api/'
 
 let base = baseUrl();
@@ -23,7 +21,7 @@ export const getMoreproducte = (pageINfo) => axios.get('api/moreProducts',{param
 // 获取分类
 export const getCategory = () => axios.get('api/showProducts')
 // 获取商品详情
-export const getGoodsDetail = (id) => axios.get('/goods/detail?goods_id=' + id)
+export const getGoodsDetail = (id) => axios.get('api/getProductByProId?productId=' + id)
 // 登录账号
 export const submitLogin = (userInfoObj) => axios.post('/login', qs.stringify(userInfoObj))
 // 注册账号
@@ -44,6 +42,8 @@ export const addCart = goodsInfo => axios.post('/my/cart/add', goodsInfo)
 export const deletCart = cartId => axiosToken.post('api/cart/batchDelCart',cartId)
 // 获取个人中心佣金
 export const getCommis = () => axiosToken.get('api/member/showUserInfo')
+// 删除订单
+export const delOrder = (list) => axiosToken.post('api/order/delOrder',list)
 // 同步购物车
 // 创建订单
 export const createOrder = goodsInfo => axios.post('/my/orders/create', goodsInfo)

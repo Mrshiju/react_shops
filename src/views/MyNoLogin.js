@@ -31,7 +31,7 @@ export class MyNoLogin extends Component {
   }
   urlTo = (item,index) => {
     console.log(index,item);
-    let url = 
+    let url = ''
     this.props.history.push(item.path)
   }
   render() {

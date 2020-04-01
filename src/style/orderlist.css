@@ -88,3 +88,31 @@
 .single-order-list .order-infos .order-infos-content > div span.total-price::first-letter {
   font-size: 10px;
 }
+
+.buy_info {
+  width: 60%;
+
+}
+.buy_info p{
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: normal!important;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.buy_info p:last-child{
+  display: inline;
+  padding: 2px;
+  color: #ccc;
+}
+
+.am-wingblank.am-wingblank-sm {
+  padding-bottom: 1.4rem;
+}
+
+.info_type div{
+  margin-left: 14px;
+}
+
