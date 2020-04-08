@@ -1,5 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+// import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Layout from './layout/Layout'
 import Home from './views/Home'
 import Category from './views/Category'
@@ -16,7 +17,9 @@ import SearchField from './views/SearchField'
 import SearchGoods from './views/SearchGoods'
 import ErrorPage from './views/ErrorPage'
 import PrivateRoute from './components/PrivateRoute'
-
+import AddressList from './views/Addresslist'
+import CategoryPage from './views/CategoryPage'
+import SeckillList from './views/seckillList'
 function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
@@ -24,13 +27,16 @@ function App() {
         <Switch>
           <Route path='/' exact render={props => <Home></Home>}></Route>
           <Route path='/category' render={props => <Layout {...props}><Category></Category></Layout>}></Route>
+          <Route path='/categorypage:productid/:cid' render={props => <Layout {...props}><CategoryPage></CategoryPage></Layout>}></Route>
           <Route path='/login' render={props => <Layout {...props}><Login></Login></Layout>}></Route>
           <Route path='/mynologin' render={props => <Layout {...props}><MyNoLogin></MyNoLogin></Layout>}></Route>
           <Route path='/my' render={props => <Layout {...props}><PrivateRoute component={My}></PrivateRoute></Layout>}></Route>
           <Route path='/cart' render={props => <Layout {...props}><PrivateRoute path="/cart" component={Cart}></PrivateRoute></Layout>}></Route>
           <Route path='/pay' render={props => <PrivateRoute {...props} component={Pay}></PrivateRoute>}></Route>
           <Route path='/address' render={props => <PrivateRoute {...props} component={AddressInfo}></PrivateRoute>}></Route>
+          <Route path='/addresslist' render={props => <PrivateRoute {...props} component={AddressList}></PrivateRoute>}></Route>
           <Route path='/order' render={props => <PrivateRoute {...props} component={OrderList}></PrivateRoute>}></Route>
+          <Route path='/SeckillList' render={props => <SeckillList></SeckillList>}></Route>
           <Route path='/register' render={props => <Layout {...props}><Register></Register></Layout>}></Route>
           <Route path='/goodsdetail:id' render={props => <GoodsDetail {...props}></GoodsDetail>}></Route>
           <Route path='/searchfield' render={props => <SearchField {...props}></SearchField>}></Route>

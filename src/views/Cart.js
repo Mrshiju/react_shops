@@ -330,10 +330,12 @@ export class Cart extends Component {
                     checked= {v.selectedStatus}
                     onChange={e => this.changeSingleSelectedStatus(e, v.cartId)}
                   >
-                    <div className="single-order">
+                    <div className="single-order" style={{height:'3rem'}}>
                       <img src={this.props.baseUrl + v.bannerpic}
                         onClick={() => this.props.history.push(`/goodsdetail/${v.cartId}`)}
-                        alt="" />
+                        alt="" 
+                        style={{height:'100%'}}
+                        />
                       <div className="order-content">
                         <div className="order-title ellipsis-2"
                           onClick={() => this.props.history.push(`/goodsdetail/${v.cartId}`)}

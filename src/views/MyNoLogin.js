@@ -40,12 +40,12 @@ export class MyNoLogin extends Component {
                  {icon:<i style={{fontSize:26}} className ='iconfont iconwodepingjia-'></i>,text:"我的评价"},
                  {icon:<i style={{fontSize:26}} className ='iconfont iconhongbao_huaban'></i>,text:"领红包"},
                  {icon:<i style={{fontSize:26}} className ='iconfont iconjifen'></i>,text:"我的积分"},
-                 {icon:<i style={{fontSize:26}} className ='iconfont icondizhiguanli'></i>,text:"地址管理"},
+                 {path:"/addresslist",icon:<i style={{fontSize:26}} className ='iconfont icondizhiguanli'></i>,text:"地址管理"},
                  {icon:<i style={{fontSize:26}} className ='iconfont iconhuodong'></i>,text:"活动"}]
     return (
       <div>
         <header>
-          <div className="title">个人中心</div>
+          <div className="title" style={{zIndex:"9999"}}>个人中心</div>
           <WingBlank style={{ marginTop: '0.53333333333rem' }}>
 
             <Flex justify="start">
@@ -95,33 +95,7 @@ export class MyNoLogin extends Component {
 
         <Grid data={data} columnNum={3} onClick={this.urlTo} />
 
-        <TabBar
-          unselectedTintColor="#949494"
-          tintColor="#33A3F4"
-          barTintColor="white"
-        >
-          <TabBar.Item
-            title="所有订单"
-            key="Home"
-            icon={<i className="iconfont icon-dingdan"></i>}
-            onPress={() => { this.props.history.push('/order/0') }}
-          >
-          </TabBar.Item>
-          <TabBar.Item
-            title="待付款"
-            key="obligation"
-            icon={<i className="iconfont icon-daifukuan"></i>}
-            onPress={() => { this.props.history.push('/order/1') }}
-          >
-          </TabBar.Item>
-          <TabBar.Item
-            title="待发货"
-            key="Mine"
-            icon={<i className="iconfont icon-daifahuo"></i>}
-            onPress={() => { this.props.history.push('/order/2') }}
-          >
-          </TabBar.Item>
-        </TabBar>
+       
 
       </div>
     )

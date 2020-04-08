@@ -1,0 +1,17 @@
+.addressTop{
+    height: 2px;
+    width: 100%;
+    background: repeating-linear-gradient( 45deg, #CD8080 0px,#CD8080 8px,white 8px,white 16px,#80A0D6 16px,#80A0D6 24px,white 24px,white 32px);
+}
+.address{
+    padding-top: 45px;
+    box-sizing: border-box;
+}
+.address-order{
+    height: 2rem;
+    font-style: normal;
+    font-size: 14px;
+    padding: .2rem;
+    display: flex;
+    align-items: center;
+}

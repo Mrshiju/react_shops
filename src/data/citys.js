@@ -9801,7 +9801,7 @@ export const cityData = [
             },
             {
                 "value": "442000",
-                "label": "中山市"
+                "label": "中山市",
             },
             {
                 "value": "445100",

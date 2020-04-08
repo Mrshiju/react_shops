@@ -1,38 +1,37 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { List, InputItem , NavBar, Icon, Toast, Flex, Button, WhiteSpace, Picker, TextareaItem} from 'antd-mobile';
-import {cityData} from '../data/citys'
-import { createForm } from 'rc-form';
-import {withRouter} from 'react-router-dom'
+import { List, InputItem , NavBar, Icon, Toast, Flex, Button, WhiteSpace, Picker, TextareaItem ,Switch} from 'antd-mobile';
+import {cityData} from '../../data/citys'
+import { createForm ,formShape} from 'rc-form';
 
-export class AddressInfo extends Component {
+export class Address extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
-             name: '',
-             phone: '',
-             address: '',
-             emailCode: ''
+            
         }
+     
     }
     SaveAddressInfo = () => {
+        this.props.SaveAddressInfo();
         // validateFields方法用于js校验, error是错误对象,如果没有就是null
-        this.props.form.validateFields((error, value) => {
-            if (error) {
-                // 有错误,校验不通过
-                Toast.fail('请检查数据是否填写正确', 2)
-            } else {
-                // 没有错误的话保存收货人信息
-                let address = document.querySelector('.am-list-extra').innerText.split(',').join('') + this.state.address
-                this.props.SaveAddressInfo(this.state.name, this.state.phone, address)
-                Toast.success('修改成功，正在返回', 2, () => {
-                    this.props.history.goBack()
-                })
-            }
-    })
+    //     this.props.form.validateFields((error, value) => {
+    //         if (error) {
+    //             // 有错误,校验不通过
+    
+    //             Toast.fail('请检查数据是否填写正确', 2)
+    //         } else {
+    //             // 没有错误的话保存收货人信息
+    //             let address = document.querySelector('.am-list-extra').innerText.split(',').join('') + this.props.address
+    //             this.props.SaveAddressInfo(this.props.name, this.props.phone, address)
+    //             Toast.success('修改成功，正在返回', 2, () => {
+    //                 this.props.history.goBack()
+    //             })
+    //         }
+    // })
 }
     render() {
+      
         const { getFieldProps, getFieldError } = this.props.form;
         return (
             <div>
@@ -71,12 +70,10 @@ export class AddressInfo extends Component {
                         }}
                         // 输入框输入改变时同步数据到state中的name
                         onChange={v => {
-                            this.setState({
-                                name: v
-                            })
+                            this.props.nameChange(v)
                         }}
                         // 将state中的name赋值给输入框
-                        value={this.state.name}
+                        value={this.props.name}
                     >
                        <span style={{color: 'red'}}>*</span> 收货人
                     </InputItem>
@@ -104,12 +101,12 @@ export class AddressInfo extends Component {
                         }}
                         // 输入框输入改变时同步数据到state中的phone
                         onChange={v => {
-                            this.setState({
-                                phone: v
-                            })
+                          
+                            this.props.phoneChange(v)
+                            
                         }}
                         // 将state中的phone赋值给输入框
-                        value={this.state.phone}
+                        value={this.props.phone}
                     >
                        <span style={{color: 'red'}}>*</span> 手机号码
                     </InputItem>
@@ -117,7 +114,7 @@ export class AddressInfo extends Component {
                         data={cityData}
                         title=""
                         {...getFieldProps('district', {
-                            // initialValue: ["440000", "440100", "440106"],
+                            initialValue: ["440000", "440100", "440106"],
                         })}
                         >
                         <List.Item arrow="horizontal"><span style={{color: 'red'}}>*</span>地区</List.Item>
@@ -145,21 +142,22 @@ export class AddressInfo extends Component {
                         }}
                         // 输入框输入改变时同步数据到state中的address
                         onChange={v => {
-                            this.setState({
-                                address: v
-                            })
+                            this.props.addressChange(v)
                         }}
                         // 将state中的address赋值给输入框
-                        value={this.state.address}
+                        value={this.props.address}
                     >
                        <span style={{color: 'red'}}>*</span> 详细地址
                     </InputItem>
+                    <List.Item
+                    extra={<Switch
+                        checked={this.props.checked}
+                        onChange={() => {
+                            this.props.checkedChange()
+                        }}
+                    />}
+                    >设为默认地址</List.Item>
                    
-                    <TextareaItem
-                        placeholder="备注信息"
-                        rows={5}
-                        count={100}
-                    />
                     <WhiteSpace />
                         <Flex justify="center">
                             <Button type="primary"   size="small" 
@@ -171,7 +169,7 @@ export class AddressInfo extends Component {
                             </Button>
                             <Button type="warning"  size="small" 
                                 className="bottom-button"
-                                onClick={this.props.history.goBack}
+                                onClick={() => this.props.close()}
                             >
                                 取消
                             </Button>      
@@ -182,15 +180,7 @@ export class AddressInfo extends Component {
         )
     }
 }
+export default createForm()(Address);
 
 
 
-const mapDispatchToProps = dispatch => {
-    return {
-        SaveAddressInfo: (name, phone, address) => {
-            dispatch({type: 'SAVE_ADDRESS_INFO', payload: {name, phone, address}})
-        }
-    }    
-}
-
-export default connect(null, mapDispatchToProps)(createForm()(withRouter(AddressInfo)))

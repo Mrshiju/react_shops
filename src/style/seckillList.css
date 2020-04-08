@@ -1,0 +1,71 @@
+.seckList{
+  padding-top: 45px;
+  box-sizing: border-box;
+  height: 100%;
+}
+.top_nav{
+  font-size: 18px;
+  text-align: center;
+}
+.top_nav > div > div{
+  text-align: center;
+  width: 33%;
+}
+#seckill_active{
+  background-color: #E7930B;
+  position: relative;
+}
+
+#seckill_active:after{
+  content:"";
+  border:6px solid transparent;
+  border-top-color:rgb(231, 147, 11);
+  position: absolute;
+  bottom:-6px;
+  left:50%;
+  transform: translateX(-50%);
+}
+.prilist{
+  display: flex;
+  justify-content: space-around;
+ margin: 0.2rem;
+ box-sizing: border-box;
+ font-size: 16px;
+}
+.prilist .seckillImg{
+  width: 3rem;
+  height: 3rem;
+}
+.seckillImg{
+  width: 3rem;
+  height: 3rem;
+}
+.seckillImg img{
+  width: 8rem;
+  height: 3rem;
+  background-size: 100%;
+}
+.prilist .proInfo{
+  flex: 1;
+  border-top: none;
+  text-align: left;
+  font-size: 18px;
+}
+.list{
+  margin-top: 0.2rem;
+}
+.subBox{
+  position: relative;
+}
+.subBox > div{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2rem;
+  text-align: center;
+  background-color: #FFA500;
+  color: white;
+}
+.topNav{
+  background: #F7DFC2;
+}

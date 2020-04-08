@@ -1,7 +1,7 @@
 {
   "name": "mobile-app",
   "version": "0.1.0",
-  "homepage": "https://baozouai.github.io/react-mobile-app/",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "antd-mobile": "^2.3.1",

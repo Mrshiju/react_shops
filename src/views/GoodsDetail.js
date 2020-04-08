@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { getGoodsDetail, addCart, getCartGoods } from '../api';
+import { getGoodsDetail, addCart, getCartGoods ,wantBuy  } from '../api';
 import { NavBar, Carousel, Icon, Badge, WingBlank, WhiteSpace, Toast, Flex, Modal, Tag, Radio,Stepper } from 'antd-mobile';
 import '../style/goodsdetail.css'
 var data = {};
@@ -11,7 +11,7 @@ export class GoodsDetail extends Component {
     super(props)
     this.state = {
       message: {},
-      id: this.props.match.params.id,
+      id:'',
       carouselList: [],
       animating: false,
       display1: 'block',  
@@ -32,10 +32,20 @@ export class GoodsDetail extends Component {
       val:0   //数量
     }
   }
+
+  //
+  componentWillMount(){
+    this.setState({ 
+      id:this.props.match.params.id
+    })
+  }
   // 页面加载后获取数据
-  componentWillMount() {
+  componentDidMount() {
     // 一开始设置等待
-    this.setState({ animating: true })
+    this.setState({ 
+      animating: true ,
+     
+    })
     // 获取商品详情
     getGoodsDetail(this.state.id).then(res => {
       var bannerpic = [...res.data.data.products.bannerpic.split(',')]
@@ -104,30 +114,29 @@ export class GoodsDetail extends Component {
   // 添加商品到购物车
   addGoodsToCart = () => {
     // 如果已登录，则直接添加到购物车
-    if (this.props.loginState) {
-      let info = {}
-      info.cat_id = this.state.message.cat_id
-      info.goods_id = this.state.message.goods_id
-      info.goods_name = this.state.message.goods_name
-      info.goods_number = this.state.message.goods_number
-      info.goods_price = this.state.message.goods_price
-      info.goods_small_logo = this.state.message.goods_small_logo
-      info.goods_weight = this.state.message.goods_weight
-      addCart({ info: JSON.stringify(info) }).then(res => {
-        const { meta: { status } } = res.data
-        if (status === 200) {
-          // 商品数量+1，改变cartReducer中的商品总数
-          this.props.addCart()
-        }
-        // 同步购物车
-        getCartGoods()
+    let res = this.hasClass()
+    if(res == false){
+      this.setState({
+        modal2:true
       })
-      Toast.success('添加成功，在购物车等亲', 2)
-    } else {
-      Toast.fail('您还没登录，请先登录', 2, () => {
-        this.props.history.push('/login')
-      })
+      return false
     }
+    let products = ''
+    for( let key in this.state.propertys){
+      products += `|${this.state.propertys[key]}`
+    }
+    let data = {
+      productId:this.state.id,
+      property:products.substring(1)
+    }
+    addCart(data).then(res => {
+      console.log('====================================');
+      console.log(res);
+      console.log('====================================');
+      if(res.data.status==true){
+        Toast.success('添加购物车成功', 1);
+      }
+    })
   }
   // 跳转到购物车
   jumpCart = () => {
@@ -144,8 +153,12 @@ export class GoodsDetail extends Component {
       })
       return false
     }
-    console.log(this.state.propertys)
-    this.props.history.push(`/pay/${this.state.message.goods_id}`)
+
+    wantBuy().then(res => {
+    
+      this.props.wantBuys(res.data.data.orderToken)
+    })
+    this.props.history.push(`/pay/${this.state.id}`)
 
     // if(this.state.proPropety == false){
     //   return false
@@ -179,6 +192,26 @@ export class GoodsDetail extends Component {
     this.setState({
       val:e
     })
+  }
+  //猜你喜欢
+  moreList = (e) => {
+    console.log(e)
+    this.setState({
+      id:e
+    })
+    this.props.history.push(`/goodsdetail${e}`)
+  }
+  componentWillReceiveProps(newProps) {
+    this.setState({ 
+      animating: true ,
+     
+    })
+    this.setState({
+      id:newProps.match.params.id
+    })
+    // 获取商品详情
+    window.location.reload()
+    
   }
   render() {
     return (
@@ -286,7 +319,9 @@ export class GoodsDetail extends Component {
         <Flex className='morePro' justify='around' wrap='wrap'>
           {
             this.state.morePro && this.state.morePro.map((item, index) => (
-              <div key={index} style={{ width: '50%', height: "6rem", padding: '.2rem', border: "1px solid #ddd" }}>
+              <div key={index} style={{ width: '50%', height: "6rem", padding: '.2rem', border: "1px solid #ddd" }}  
+                onClick={() => this.moreList(item.id)} 
+               >
                 <div style={{ width: '100%', height: '4rem', textAlign: 'center' }}>
                   <img src={this.props.baseUrl + item.bannerpic} alt='moreList' style={{ width: '100%', height: '100%' }} />
                 </div>
@@ -368,28 +403,12 @@ export class GoodsDetail extends Component {
             <span>联系客服</span>
           </div>
           <div className="goods-footer-item cart" onClick={() => this.props.history.push('/cart')}>
-            <span className="iconfont icongouwuche1">
-              <Badge
-                text={this.props.totalNum}
-                overflowCount={50}
-                style={{
-                  position: 'absolute',
-                  width: 'auto',
-                  height: 'auto',
-                  top: '-20px',
-                  right: '-18px',
-                  fontSize: 8,
-                  borderRadius: '50%',
-                  backgroundColor: '#e4393c',
-                  textAlign: 'center',
-                  color: 'white'
-                }}>
-              </Badge>
-            </span>
+            <span className="iconfont icongouwuche1"> </span>
+            <span>购物车</span>
           </div>
           <div className="goods-footer-item add" onClick={this.addGoodsToCart}>
             <span>加入购物车</span>
-          </div>
+          </div>  
           <div className="goods-footer-item buy" onClick={this.buyNow}>
             <span>立即购买</span>
           </div>
@@ -413,12 +432,16 @@ const mapStateToProps = state => {
 // 创建映射dispatch函数
 const mapDispatchToProps = dispatch => {
   return {
+    wantBuys:(ordertoken) => {
+      dispatch({ type: 'GET_ORDERTOKEN', payload: { ordertoken } })
+    },
     addCart: () => {
       dispatch({ type: 'ADD_CART' })
     },
     buyNow: (selectedGoodsTotalNum, totalPrice) => {
       dispatch({ type: 'BUY_NOW', payload: { selectedGoodsTotalNum, totalPrice } })
-    }
+    },
+   
   }
 }
 

@@ -46,7 +46,11 @@ export class OrderList extends Component {
       getOrder().then(res => {
         let nonPaymentData,waitReceivingData,receivedData,refundData;
         if(res.data.data&&res.data.data.length!=0){
-          
+          this.setState({
+                count:res.data.data.length,
+                list:res.data.data,
+                orders:res.data.data
+              })
           //filter
           res.data.data = res.data.data.filter(function(item){
             return item.orderInfo != null
@@ -154,12 +158,18 @@ export class OrderList extends Component {
             listDate:[[],[],[],[],[],[]]
           })
         }
-  
-        this.setState({
-          count:res.data.data.length,
-          list:res.data.data,
-          orders:res.data.data
-        })
+        // if(res.data.data.length){
+        //   this.setState({
+        //     count:res.data.data.length,
+        //     list:res.data.data,
+        //     orders:res.data.data
+        //   })
+        // }else{
+        //   this.setState({
+        //     count:0
+        //   })
+        // }
+        
       }) 
     }
 

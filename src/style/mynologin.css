@@ -8,6 +8,8 @@ header .title {
   padding-top: .266667rem;
   font-size: .48rem;
   color: #fff;
+  z-index: 999;
+  background-color: #33A3F4;
 }
 header .avatar {
   display: flex;

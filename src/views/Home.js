@@ -6,6 +6,22 @@ import qs from 'querystring'
 import { connect } from 'react-redux'
 import '../style/home.css'
 import Layout from '../layout/Layout'
+import ContentLoader from 'react-content-loader'
+const Loader = () => {
+  let loader = []
+  for(let i = 0 ; i < 4 ;i++){
+   loader.push( <ContentLoader viewBox="0 0 400 150" key={i} style={{background:"white"}}>
+   {/* Only SVG shapes */}    
+   <circle cx="30" cy="80" r='10'  />
+   <rect x="100" y="50" rx="3" ry="3" width="70" height="80" />
+   <rect x="180" y="50" rx="3" ry="3" width="200" height="40" />
+   <rect x="180" y="110" rx="3" ry="3" width="70" height="20" />
+   <rect x="280" y="110" rx="3" ry="3" width="40" height="20" />
+   <rect x="340" y="110" rx="3" ry="3" width="40" height="20" />
+ </ContentLoader>)
+  }
+  return loader
+}
 export class Home extends Component {
   constructor(props) {
     super(props)
@@ -29,7 +45,10 @@ export class Home extends Component {
       pageNum:5,
       pageSize:10,
       //展示回到顶部
-      showTop:false
+      showTop:false,
+
+      //秒杀点击
+      seckillClickShow:true,
 
 
     }
@@ -59,6 +78,13 @@ export class Home extends Component {
 
     })
 
+    // 获取当前时间
+    let data = new Date();
+    if(data.getHours() < 10){
+      this.setState({
+        seckillClickShow:false
+      })
+    }
     window.addEventListener("scroll",this.handleScroll)
     
   }
@@ -80,6 +106,7 @@ export class Home extends Component {
         showTop:false
       })
     }
+    
     if(this.scrollDom.scrollTop + this.scrollDom.clientHeight >= this.scrollDom.scrollHeight){
       pageNum ++;
       this.setState({
@@ -138,13 +165,26 @@ export class Home extends Component {
     this.props.history.push('/searchgoods/' + qs.stringify({ cid }))
   }
 
+  // 秒杀点击
+  seckillClick = (v) => {
+    if(this.state.seckillClickShow == false){
+      Toast.fail('活动时间暂未开始', 1);
+      return false;
+    }
+    this.props.history.push(`/goodsdetail${v.id}`)
+  }
+
   render() {
     return (
       // 轮播图区域
+     
       <div className="home" 
         ref={ el =>this.scrollDom = el} 
         onScroll={this.handleScroll}
       >
+      {
+        !this.state.bannerList&&<Loader></Loader>
+      }
         {/* 搜索栏 */}
         {this.props.location.pathname === '/' ?
           <SearchBar placeholder={this.state.placeholderPre}
@@ -189,7 +229,9 @@ export class Home extends Component {
               <div>限时抢购</div>
               <div>
                 <div></div>
-                <div style={{textAlign:'center',alignItems:'center'}}>更多抢购<Icon type="right" style={{verticalAlign:"bottom"}}/></div>
+                <div style={{textAlign:'center',alignItems:'center'}} 
+                onClick={() => this.props.history.push('/SeckillList')}
+                >更多抢购<Icon type="right" style={{verticalAlign:"bottom"}}/></div>
               </div>
             </Flex>
           </div>
@@ -197,10 +239,11 @@ export class Home extends Component {
           <div className="seckillList">
             <Flex
               align="center"
-
             >
               {this.state.skillList.map(v => (
-                  <div key={v.id} className="seckillList">
+                  <div key={v.id} className="seckillList" 
+                   onClick={() => this.seckillClick(v)}
+                  >
                     <div className='seckillImg'>
                       <img src={this.props.baseUrl +v.bannerpic} alt='seckill' />
                     </div>
@@ -257,12 +300,12 @@ export class Home extends Component {
                         </Flex>
 
                       </div>
-                      <button
+                      {/* <button
                         className='search-similar'
                         onClick={() => this.handleSearchSimilar(v.id)}
                       >
                         立即购买
-                      </button>
+                      </button> */}
                     </div>
                   ))}
                 </Flex>
