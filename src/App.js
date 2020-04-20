@@ -20,6 +20,11 @@ import PrivateRoute from './components/PrivateRoute'
 import AddressList from './views/Addresslist'
 import CategoryPage from './views/CategoryPage'
 import SeckillList from './views/seckillList'
+import ClassPage from './views/ClassPage'
+import Share from './views/Share'
+import FeedBack from './views/FeedBack'
+import OrderInfo from './views/OrderInfo'
+import FeedBackInfo from './views/FeedBackInfo'
 function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
@@ -27,20 +32,25 @@ function App() {
         <Switch>
           <Route path='/' exact render={props => <Home></Home>}></Route>
           <Route path='/category' render={props => <Layout {...props}><Category></Category></Layout>}></Route>
-          <Route path='/categorypage:productid/:cid' render={props => <Layout {...props}><CategoryPage></CategoryPage></Layout>}></Route>
+          <Route path='/categorypage:productid/:cid' render={props => <CategoryPage></CategoryPage>}></Route>
           <Route path='/login' render={props => <Layout {...props}><Login></Login></Layout>}></Route>
-          <Route path='/mynologin' render={props => <Layout {...props}><MyNoLogin></MyNoLogin></Layout>}></Route>
+          <Route path='/mynologin' render={props => <Layout {...props} ><PrivateRoute component={MyNoLogin}></PrivateRoute></Layout>}></Route>
           <Route path='/my' render={props => <Layout {...props}><PrivateRoute component={My}></PrivateRoute></Layout>}></Route>
-          <Route path='/cart' render={props => <Layout {...props}><PrivateRoute path="/cart" component={Cart}></PrivateRoute></Layout>}></Route>
+          <Route path='/cart' render={props => <Layout {...props}><PrivateRoute  component={Cart}></PrivateRoute></Layout>}></Route>
           <Route path='/pay' render={props => <PrivateRoute {...props} component={Pay}></PrivateRoute>}></Route>
+          <Route path='/feedback' render={props => <PrivateRoute {...props} component={FeedBack}></PrivateRoute>}></Route>
+          <Route path='/feedbackinfo' render={props => <PrivateRoute {...props} component={FeedBackInfo}></PrivateRoute>}></Route>
           <Route path='/address' render={props => <PrivateRoute {...props} component={AddressInfo}></PrivateRoute>}></Route>
           <Route path='/addresslist' render={props => <PrivateRoute {...props} component={AddressList}></PrivateRoute>}></Route>
           <Route path='/order' render={props => <PrivateRoute {...props} component={OrderList}></PrivateRoute>}></Route>
+          <Route path='/share' component={Share}></Route>
+          <Route path='/orderinfo:orderNum' component={OrderInfo}></Route>
           <Route path='/SeckillList' render={props => <SeckillList></SeckillList>}></Route>
           <Route path='/register' render={props => <Layout {...props}><Register></Register></Layout>}></Route>
           <Route path='/goodsdetail:id' render={props => <GoodsDetail {...props}></GoodsDetail>}></Route>
           <Route path='/searchfield' render={props => <SearchField {...props}></SearchField>}></Route>
           <Route path='/searchgoods/:goodsvalue' render={props => <SearchGoods {...props}></SearchGoods>}></Route>
+          <Route path='/classpage:id' render={props => <ClassPage {...props}></ClassPage>}></Route>
           <Route path='/404' render={props => <ErrorPage {...props}></ErrorPage>}></Route>
           <Redirect to="/404"></Redirect>
         </Switch>

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Modal, Checkbox, WingBlank, Stepper, SwipeAction, Toast } from 'antd-mobile'
 import emptyCart from '../assets/imgs/cart_empty.png'
-import { getCartGoods, syncCart , deletCart} from '../api/index'
+import { getCartGoods, syncCart , deletCart ,wantBuy} from '../api/index'
 import '../style/cart.css'
 import ContentLoader from 'react-content-loader'
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -212,11 +212,7 @@ export class Cart extends Component {
         this.init()
       }
     })
-    // cart_infos.forEach(item => {
-    //   if(item.cartId == cartId){
-    //     delete item
-    //   }
-    // })
+    
     // 再更新state中的cart_infos
     this.setState({
       cart_infos,
@@ -236,13 +232,22 @@ export class Cart extends Component {
   handleDeleteBatchGoods = () => {
     // 获取副本
     let cart_infos = this.state.cart_infos
+    let cartIds= []
     // 循环判断哪些商品被选中，选中的直接删除
     for (let cartId in cart_infos) {
       // 如果selectedStatus，即被选中，删除掉
-      if (cart_infos[cartId].selectedStatus) {
-        delete cart_infos[cartId]
+     
+      if(cart_infos[cartId].selectedStatus === true){
+        cartIds.push(cart_infos[cartId].cartId)
       }
+
     }
+    deletCart(cartIds).then(res => {
+      if(res.data.status == true){
+        Toast.success('删除成功',1)
+        this.init()
+      }
+    })
     // 这里因为选中了商品，所以计算了所选中商品的总价和总商品数，故点击删除的时候要清零，否则删除后数字还在
     this.setState({
       cart_infos,
@@ -262,6 +267,11 @@ export class Cart extends Component {
       Toast.fail('您还没有选择宝贝呢', 2)
       return
     }
+    wantBuy().then(res => {
+    
+      this.props.wantBuys(res.data.data.orderToken)
+     
+    })
     // 将CartReducer中保存的数据更新
     this.props.snycCartGoods(this.state.list, this.state.totalPrice, this.state.selectedGoodsTotalNum)
     this.props.history.push('/pay')
@@ -331,14 +341,14 @@ export class Cart extends Component {
                     onChange={e => this.changeSingleSelectedStatus(e, v.cartId)}
                   >
                     <div className="single-order" style={{height:'3rem'}}>
-                      <img src={this.props.baseUrl + v.bannerpic}
-                        onClick={() => this.props.history.push(`/goodsdetail/${v.cartId}`)}
+                      <img src={this.props.baseUrl + v.bannerpic.split(',')[0]}
+                        onClick={() => this.props.history.push(`/goodsdetail${v.proId}`)}
                         alt="" 
                         style={{height:'100%'}}
                         />
                       <div className="order-content">
                         <div className="order-title ellipsis-2"
-                          onClick={() => this.props.history.push(`/goodsdetail/${v.cartId}`)}
+                          onClick={() => this.props.history.push(`/goodsdetail${v.cartId}`)}
                         >
                           {v.title}
                         </div>
@@ -432,7 +442,11 @@ const mapActionToProps = (dispatch) => {
     // 同步购物车数据
     snycCartGoods: (cart_Infos, totalPrice, selectedGoodsTotalNum) => {
       dispatch({ type: 'SYNC_CART_GOODS', payload: { cart_Infos, totalPrice, selectedGoodsTotalNum } })
+    },
+    wantBuys:(ordertoken) => {
+      dispatch({ type: 'GET_ORDERTOKEN', payload: { ordertoken } })
     }
+
   }
 }
 

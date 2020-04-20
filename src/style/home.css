@@ -3,7 +3,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 10rem;
+  width: 100%;
 }
 .search-area .am-search-input .am-search-synthetic-ph {
   line-height: 17px;
@@ -70,6 +70,7 @@
   display: block;
 }
 .home{
+  width: 100%;
   height: 100%;
   overflow: auto;
   font-size: 1.2rem;
@@ -149,5 +150,16 @@
   width: 1rem;
   border:1px solid black;
   border-radius: 50%;
+}
+
+
+.am-search-input .am-search-synthetic-ph, .am-search-input input[type="search"]{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-60%);
+}
+
+.share_ui{
+  background-color: #fff;
 }
 

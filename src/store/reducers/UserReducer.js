@@ -1,9 +1,12 @@
 // 初始token为空
 let initState = {
     loginState: false,
-    name: '暴走',
-    phone: 13999999999,
-    address: '广东省广州市天河区...'
+    name: null,
+    phone: null,
+    address: null,
+    count:1,
+    des:'',
+    uid:null
 }
 export const UserReducer = (state = initState, action) => {
     switch (action.type) {
@@ -21,6 +24,10 @@ export const UserReducer = (state = initState, action) => {
         case 'LOGINOUT':
             sessionStorage.removeItem('token')
             return {...state, loginState: false}
+        case 'BUY_PRODUCT':
+            return {...state,count:action.payload.count,des:action.payload.des}  
+        case 'SAVE_UID':
+            return {...state,uid:action.payload.uid}
         default:
             return {...state, loginState: sessionStorage.getItem('token')? true: false}
     }

@@ -44,7 +44,7 @@ export class CategoryPage extends Component {
   componentWillMount() {
   
     this.init()
-    window.addEventListener("scroll", this.handleScroll1)
+    window.addEventListener("touchmove", this.handleScroll1)
   
   }
 
@@ -105,6 +105,7 @@ export class CategoryPage extends Component {
     
  }
   handleScroll1 = (i,cid,pgNum) => e => {
+    
     let pageNum = pgNum || this.state.pageNum;
    
     if (this[`scrollDom${i}`].scrollTop + this[`scrollDom${i}`].clientHeight  >= this[`scrollDom${i}`].scrollHeight) {
@@ -150,7 +151,7 @@ export class CategoryPage extends Component {
   render() {
     const tabs = this.state.threeData;
     return (
-      <div style={{height:'100%',overflow:'auto'}}>
+      <div >
         <NavBar
           mode="dark"
           leftContent={<Icon type='left' />}
@@ -159,7 +160,7 @@ export class CategoryPage extends Component {
         >商品分类</NavBar>
         <div className="categorypage">
           {/* 顶部导航条 */}
-          <Tabs tabs={tabs} key={tabs} initialPage={`t${this.state.cid}`} renderTabBar={props => <Tabs.DefaultTabBar {...props} page={4} style={{ display: "inline-block" }} />}>
+          <Tabs tabs={tabs} key={tabs} initialPage={`t${this.state.cid}`} distanceToChangeTab={0.6} renderTabBar={props => <Tabs.DefaultTabBar {...props} page={4} style={{ display: "inline-block" }} />}>
 
             {tabs && tabs.map((item, index) => (
                 <div className={`catepageList catepageList${item.key}`} style={{height:"100%"}} key={item.key} ref={ el =>this[`scrollDom${index}`] = el} onScroll={this.handleScroll1(index,item.cid,item.pageNum)}>

@@ -1,7 +1,7 @@
 let initState = {
     baseUrl: "http://sms-shop.oss-cn-beijing.aliyuncs.com/",
-    token:'4832d662-77c1-4e67-8380-c1a608523ac6',
-    ordertoken:"445454545"
+    token: 'c582d6a0-cfa0-4f80-a245-2c1f0ced3fce',
+    ordertoken: "",
 }
 
 
@@ -10,10 +10,14 @@ export const BaseReducer = (state = initState, action) => {
         // 想买时
         case 'GET_ORDERTOKEN':
             // 登录成功则将token存入会话存储
-            return {...state, ordertoken: action.payload.ordertoken}
-       
+            return { ...state, ordertoken: action.payload.ordertoken }
+            // token outtime
+        case 'UPTOKEN':
+            // 登录成功则将token存入会话存储
+            return { ...state, token: action.payload.token }
+            
         default:
-            return {...state}
+            return { ...state }
     }
     // return {...state}
 }

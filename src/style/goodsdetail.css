@@ -57,7 +57,7 @@
   transform: translateX(-50%);
   height: 1.333333rem;
   max-height: 80px;
-  width: 10rem;
+  width: 100%;
   border-top: 1px solid #e7e7e7;
   background-color: #fff;
 }
@@ -115,7 +115,7 @@
   border-top: #ff4444 2px solid;
 }
 .morePro{
-  font-size: .2rem;
+  font-size: .4rem;
 }
 .checkPro{
   border-bottom: 1px #ddd solid;
@@ -136,4 +136,7 @@
 #active {
   color: white;
   background: orange;
+}
+#root > div{
+  position: relative !important;
 }

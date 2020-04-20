@@ -43,9 +43,9 @@ export class MyNoLogin extends Component {
                  {path:"/addresslist",icon:<i style={{fontSize:26}} className ='iconfont icondizhiguanli'></i>,text:"地址管理"},
                  {icon:<i style={{fontSize:26}} className ='iconfont iconhuodong'></i>,text:"活动"}]
     return (
-      <div>
+      <div className='myOrder'>
         <header>
-          <div className="title" style={{zIndex:"9999"}}>个人中心</div>
+          <div className="title" style={{zIndex:"9999",width:'100%'}}>个人中心</div>
           <WingBlank style={{ marginTop: '0.53333333333rem' }}>
 
             <Flex justify="start">

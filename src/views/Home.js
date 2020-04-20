@@ -55,6 +55,8 @@ export class Home extends Component {
   }
   // 在render之前获取数据
   componentWillMount() {
+    /* uid get */
+    this.saveUid()
     // 获取商品列表数据
     getHomeGoodslist().then(res => {
       let imgUrl = ['jujiashenghuo.png','fushixiebao.png','meishijiushui.png','gehuqingjie.png','muyinqingzi.png','yundonglvxing.png','shumajiadian.png','quanqiutese.png']
@@ -91,6 +93,23 @@ export class Home extends Component {
  
   componentWillUnmount(){
     window.removeEventListener("scroll",this.handleScroll)
+  }
+  /* 判断是否有uid 有存储  下单时携带 */
+  saveUid = () => {
+    let url = window.location.href
+    let uid = this.getUid(url)
+    if(uid !== undefined){
+      this.props.saveUid(uid)
+    }
+  }
+  /* 获取uid */
+  getUid = (url) => {
+    let result = {},
+      reg1 = /([^?=&#]+)=([^?=&#]+)/g,
+      reg2 = /#([^?=&#]+)/g;
+    url.replace(reg1, (n, x, y) => result[x] = y);
+    url.replace(reg2, (n, x) => result['HASH'] = x);
+    return result.uid;
   }
   /* 滚动加载更多 */
   handleScroll = () => {
@@ -181,17 +200,20 @@ export class Home extends Component {
       <div className="home" 
         ref={ el =>this.scrollDom = el} 
         onScroll={this.handleScroll}
+        style={{width:'100%'}}
       >
-      {
-        !this.state.bannerList&&<Loader></Loader>
-      }
+      
         {/* 搜索栏 */}
         {this.props.location.pathname === '/' ?
           <SearchBar placeholder={this.state.placeholderPre}
             onFocus={() => this.props.history.push('/searchfield')}
             className="search-area"
-          /> : ''}
+          /> 
+          : ''}
         {/* 轮播图 */}
+        {
+          !this.state.bannerList&&!this.state.productList&&!this.state.skillList&&<Loader></Loader>
+        }
         {<Carousel
           autoplay={true}
           infinite
@@ -208,7 +230,7 @@ export class Home extends Component {
         <div className="catitems">
           {
             this.state.productList.map(item => (
-              <div onClick={() => this.props.history.push(`/searchgoods/query=${item.cid}`)} key={item.cid}>
+              <div onClick={() => this.props.history.push(`/classpage${item.cid}`)} key={item.cid}>
                 <img src={require(`../assets/imgs/${item.imgUrl}`)} alt="" />
                 <div>
                   {item.name}
@@ -217,7 +239,11 @@ export class Home extends Component {
             ))
           }
         </div>
-
+        {/* 分享 */}
+        <WhiteSpace size="sm" />
+        <div className='share_ui' onClick={()=> {this.props.history.push('/share')}}>
+          <img  src={require('../assets/imgs/share.png')} alt='' />
+        </div>
         <WhiteSpace size="sm" />
         {/* 秒杀页面 */}
         <div className="seckill">
@@ -342,4 +368,11 @@ const mapStateToProps = state => {
     baseUrl: state.baseModule.baseUrl
   }
 }
-export default connect(mapStateToProps)(withRouter(Home))
+const mapActionsToProps = (dispatch) => {
+  return {
+    saveUid:(uid) => {
+      dispatch({type:"SAVE_UID",payload:{uid}})
+    }
+  }
+}
+export default connect(mapStateToProps,mapActionsToProps)(withRouter(Home))

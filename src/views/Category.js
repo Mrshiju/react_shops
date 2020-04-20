@@ -116,8 +116,8 @@ export class Category extends Component {
                           {
                             item['three'].map((item, index) => (
                               <div style={{ width: '33%' }} key={index} onClick={ () => this.props.history.push(`/categorypage${item.pid}/${item.cid}`)}>
-                                <div className="img">
-                                  <img src={this.props.baseUrl + 'classification' + item.images} alt=''></img>
+                                <div className="img" style={{position:'relative',paddingTop:'100%'}}>
+                                  <img src={this.props.baseUrl + 'classification' + item.images} alt='' style={{position:'absolute',height:'100%',top:0}}></img>
                                 </div>
                                 <p style={{ fontSize: 12, textAlign: 'center' }}>{item.name}</p>
                               </div>

@@ -117,7 +117,7 @@
   height: 50px;
   line-height: 50px;
   width: 100%;
-  max-width: 10rem;
+  /* max-width: 10rem; */
   border-top: 1px solid #e7e7e7;
   background-color: #fff;
 }

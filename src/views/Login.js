@@ -95,7 +95,7 @@ export class Login extends Component {
                     onLeftClick={() => this.props.history.push('/')}
                     style={{
                         position: 'fixed',
-                        width: '10rem',
+                        width: '100%',
                         left: '50%',
                         top: 0,
                         transform: 'translateX(-50%)',

@@ -1,38 +1,34 @@
 import React, { Component } from 'react'
-import { List, InputItem , NavBar, Icon, Toast, Flex, Button, WhiteSpace, Picker, TextareaItem ,Switch} from 'antd-mobile';
-import {cityData} from '../../data/citys'
-import { createForm ,formShape} from 'rc-form';
+import { List, InputItem, NavBar, Icon, Toast, Flex, Button, WhiteSpace, Picker, TextareaItem, Switch } from 'antd-mobile';
+import { cityData1 } from '../../data/citys1'
+import { createForm, formShape } from 'rc-form';
 
 export class Address extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
-            
+
         }
-     
+
+    }
+    componentWillMount() {
+
+    }
+    componentDidMount() {
+        this.props.form.setFieldsValue({
+            phone: this.props.phone,
+            address: this.props.address,
+            name: this.props.name
+        });
     }
     SaveAddressInfo = () => {
         this.props.SaveAddressInfo();
-        // validateFields方法用于js校验, error是错误对象,如果没有就是null
-    //     this.props.form.validateFields((error, value) => {
-    //         if (error) {
-    //             // 有错误,校验不通过
-    
-    //             Toast.fail('请检查数据是否填写正确', 2)
-    //         } else {
-    //             // 没有错误的话保存收货人信息
-    //             let address = document.querySelector('.am-list-extra').innerText.split(',').join('') + this.props.address
-    //             this.props.SaveAddressInfo(this.props.name, this.props.phone, address)
-    //             Toast.success('修改成功，正在返回', 2, () => {
-    //                 this.props.history.goBack()
-    //             })
-    //         }
-    // })
-}
+    }
     render() {
-      
+
         const { getFieldProps, getFieldError } = this.props.form;
+
         return (
             <div>
                 <NavBar
@@ -75,7 +71,7 @@ export class Address extends Component {
                         // 将state中的name赋值给输入框
                         value={this.props.name}
                     >
-                       <span style={{color: 'red'}}>*</span> 收货人
+                        <span style={{ color: 'red' }}>*</span> 收货人
                     </InputItem>
                     <InputItem
                         // 输入类型为手机号码
@@ -101,25 +97,25 @@ export class Address extends Component {
                         }}
                         // 输入框输入改变时同步数据到state中的phone
                         onChange={v => {
-                          
+
                             this.props.phoneChange(v)
-                            
+
                         }}
                         // 将state中的phone赋值给输入框
                         value={this.props.phone}
                     >
-                       <span style={{color: 'red'}}>*</span> 手机号码
+                        <span style={{ color: 'red' }}>*</span> 手机号码
                     </InputItem>
                     <Picker
-                        data={cityData}
+                        data={cityData1}
                         title=""
                         {...getFieldProps('district', {
-                            initialValue: ["440000", "440100", "440106"],
+                            initialValue: ["110000", "110100", "110106"],
                         })}
-                        >
-                        <List.Item arrow="horizontal"><span style={{color: 'red'}}>*</span>地区</List.Item>
+                    >
+                        <List.Item arrow="horizontal"><span style={{ color: 'red' }}>*</span>地区</List.Item>
                     </Picker>
-                    
+
                     <InputItem
                         placeholder="请输入详细地址"
                         // 输入框尾部清空按钮
@@ -147,34 +143,34 @@ export class Address extends Component {
                         // 将state中的address赋值给输入框
                         value={this.props.address}
                     >
-                       <span style={{color: 'red'}}>*</span> 详细地址
+                        <span style={{ color: 'red' }}>*</span> 详细地址
                     </InputItem>
                     <List.Item
-                    extra={<Switch
-                        checked={this.props.checked}
-                        onChange={() => {
-                            this.props.checkedChange()
-                        }}
-                    />}
+                        extra={<Switch
+                            checked={this.props.checked}
+                            onChange={() => {
+                                this.props.checkedChange()
+                            }}
+                        />}
                     >设为默认地址</List.Item>
-                   
+
                     <WhiteSpace />
-                        <Flex justify="center">
-                            <Button type="primary"   size="small" 
-                                className="bottom-button"
-                                style={{marginRight: 10}}
-                                onClick={this.SaveAddressInfo}
-                            >
-                                保存
+                    <Flex justify="center">
+                        <Button type="primary" size="small"
+                            className="bottom-button"
+                            style={{ marginRight: 10 }}
+                            onClick={this.SaveAddressInfo}
+                        >
+                            保存
                             </Button>
-                            <Button type="warning"  size="small" 
-                                className="bottom-button"
-                                onClick={() => this.props.close()}
-                            >
-                                取消
-                            </Button>      
-                        </Flex>
-                    <WhiteSpace/>     
+                        <Button type="warning" size="small"
+                            className="bottom-button"
+                            onClick={() => this.props.close()}
+                        >
+                            取消
+                            </Button>
+                    </Flex>
+                    <WhiteSpace />
                 </List>
             </div>
         )

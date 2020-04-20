@@ -29,12 +29,13 @@ export class GoodsDetail extends Component {
       index:{
 
       },
-      val:0   //数量
+      val:1   //数量
     }
   }
 
   //
   componentWillMount(){
+    this.saveUid()
     this.setState({ 
       id:this.props.match.params.id
     })
@@ -53,6 +54,12 @@ export class GoodsDetail extends Component {
       var evaluate = res.data.data.products.customerevaluation.split("#1#")
       var proImg = res.data.data.products.productinfo.split(",")
       var property = JSON.parse(res.data.data.products.productproperty)
+      res.data.data.mall.list.map((item,index) => {
+        if(item.title.split('】').length > 1){
+          item.title = item.title.split('】')[1]
+        }
+      })
+
       if (res) {
         this.setState({
           carouselList: bannerpic,
@@ -92,11 +99,7 @@ export class GoodsDetail extends Component {
       // eslint-disable-next-line no-unused-vars
       
       if (Object.keys(this.state.propertys).length != Object.keys(this.state.willPropertys).length) {
-        // wx.showToast({
-        //   title: '请选择商品属性',
-        //   icon:'none',
-        //   duration: 2000
-        // })
+       
         Toast.fail('请选择商品属性', 1);
         result = false
       }else{
@@ -130,9 +133,6 @@ export class GoodsDetail extends Component {
       property:products.substring(1)
     }
     addCart(data).then(res => {
-      console.log('====================================');
-      console.log(res);
-      console.log('====================================');
       if(res.data.status==true){
         Toast.success('添加购物车成功', 1);
       }
@@ -142,29 +142,58 @@ export class GoodsDetail extends Component {
   jumpCart = () => {
     this.props.history.push('/my/cart')
   }
+   /* 判断是否有uid 有存储  下单时携带 */
+   saveUid = () => {
+    let url = window.location.href
+    let uid = this.getUid(url)
+    if(uid !== undefined){
+      this.props.saveUid(uid)
+    }
+  }
+  /* 获取uid */
+  getUid = (url) => {
+    let result = {},
+      reg1 = /([^?=&#]+)=([^?=&#]+)/g,
+      reg2 = /#([^?=&#]+)/g;
+    url.replace(reg1, (n, x, y) => result[x] = y);
+    url.replace(reg2, (n, x) => result['HASH'] = x);
+    return result.uid;
+  }
   // 立即购买
   buyNow = () => {
-    // 如果已登录，则跳转到支付页面
-    // 立即购买的话设置商品总数量为1，价格为单价
+    // 如果已token，则跳转到支付页面
     let res = this.hasClass()
-    if(res == false){
+    if(res === false){
       this.setState({
         modal2:true
       })
       return false
     }
-
+    let products = ''
+    for(let key in this.state.propertys){
+      products += `|${this.state.propertys[key]}`
+    }
+    
+    let proInfo = []
+    let info = {
+      proId:this.state.id,
+      pcount:this.state.count,
+      wxPrice:this.state.goodInfo.wxPrice,
+      title:this.state.goodInfo.title,
+      bannerpic:this.state.goodInfo.bannerpic.split(',')[0],
+      property:products.substring(1)
+    }
+    proInfo.push(info)
     wantBuy().then(res => {
     
       this.props.wantBuys(res.data.data.orderToken)
     })
+    this.props.buyNow(this.state.count,products.substring(1))
+    this.props.payProductInfo(proInfo)
+
+   
     this.props.history.push(`/pay/${this.state.id}`)
 
-    // if(this.state.proPropety == false){
-    //   return false
-    // }
-    // this.props.buyNow(1, this.state.message.goods_price)
-    // this.props.history.push(`/pay/${this.state.message.goods_id}`)
   }
   //选择关闭
   onClose = key => () => {
@@ -190,7 +219,7 @@ export class GoodsDetail extends Component {
   buyCount = (e) => {
 
     this.setState({
-      val:e
+      count:e
     })
   }
   //猜你喜欢
@@ -215,7 +244,7 @@ export class GoodsDetail extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='goodsdetail'>
 
         {/* 顶部导航条 */}
         <NavBar
@@ -370,7 +399,7 @@ export class GoodsDetail extends Component {
                   <p style={{ paddingBottom: '.2rem' }}> {item}</p>
                   {
                     this.state.willPropertys[item].split(',').map((item1, index) => (
-                      <span style={{ border: "1px solid #ddd", padding: '.1rem', margin: ' .2rem', borderRadius: '4px',display:"inline-block" }}
+                      <span key={index} style={{ border: "1px solid #ddd", padding: '.1rem', margin: ' .2rem', borderRadius: '4px',display:"inline-block" }}
                       onClick={() => this.checked(item1,index,index1)}
                       id={index == this.state.index[index1] ? 'active' : ''}
                       > {item1}</span>
@@ -438,9 +467,16 @@ const mapDispatchToProps = dispatch => {
     addCart: () => {
       dispatch({ type: 'ADD_CART' })
     },
-    buyNow: (selectedGoodsTotalNum, totalPrice) => {
-      dispatch({ type: 'BUY_NOW', payload: { selectedGoodsTotalNum, totalPrice } })
+    buyNow: (count, des) => {
+      dispatch({ type: 'BUY_PRODUCT', payload: { count, des } })
     },
+    payProductInfo:(payProductinfo)=>{
+      dispatch({type:'ADD_PAYPRO', payload :payProductinfo })
+    },
+    saveUid:(uid) => {
+      dispatch({type:'SAVE_UID',payload:{uid}})
+    }
+
    
   }
 }

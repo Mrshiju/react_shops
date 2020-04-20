@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { SearchBar } from 'antd-mobile';
-import { searchSuggest } from '../api/index'
+import { searchGoods } from '../api/index'
 import {WingBlank} from 'antd-mobile'
 import '../style/searchfield.css'
 export class SearchField extends Component {
@@ -14,26 +14,37 @@ export class SearchField extends Component {
         }
     }
     handleSearch = value => {
-        this.props.history.push('/searchgoods/query=' + value)
-
+        console.log('====================================');
+        console.log(value);
+        console.log('====================================');
+        // this.props.history.push('/searchgoods/query=' + value)
+        let data = {
+            pageNum:1,
+            pageSize:12,
+            name:value
+        }
+        searchGoods(data).then(res => {
+            console.log('====================================');
+            console.log(res);
+            console.log('====================================');
+            res.data.data.list.forEach(item => {
+                item.bannerpic = item.bannerpic.split(',')[0]
+            });
+            this.setState({
+                suggestData:res.data.data.list
+            })
+        })
     }
     // 搜索建议
     handleSearchSuggest = value => {
-        searchSuggest(value).then(res => {
-            const {meta: {status}, message: {goods}} = res.data
-            if (status === 200) {
-                // 只获取前十条数据
-                this.setState({
-                    suggestData: goods.slice(0, 10)
-                })
-            }
-        })
+       
+      
     }
     // 点击搜索建议跳转到商品列表页面    
     handleSearchSimilar = cid => {
-        this.props.history.push('/searchgoods/cid=' + cid)
+        this.props.history.push(`/goodsdetail${cid}`)
     }
-    UNSAFE_componentDidMount() {
+    componentDidMount() {
         // 自动聚焦
         this.autoFocusInst.focus();
     }
@@ -64,8 +75,8 @@ export class SearchField extends Component {
                     <ul className="suggest-list">
                         {this.state.suggestData.map(v => (
                             // 点击搜索建议跳转到商品列表页面
-                            <li key={v.goods_id} onClick={() => this.handleSearchSimilar(v.cat_id)}>
-                                <span className="left">{v.goods_name.slice(0, 20)}...</span> 
+                            <li key={v.id} onClick={() => this.handleSearchSimilar(v.id)}>
+                                <span className="left">{v.title}...</span> 
                                 <span className="right">↖</span>
                             </li>
                         ))}
